@@ -16,6 +16,9 @@ if (nodeIP?.trim()) {
             stage("Install Java"){
                 sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum install java-1.8.0-openjdk-devel -y'
             }
+            stage("Install Ansible"){
+                sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum install ansible -y'
+            }
         }
     }
 }
