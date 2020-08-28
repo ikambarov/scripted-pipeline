@@ -14,7 +14,10 @@ if (nodeIP?.trim()) {
 
             withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-master-ssh-key', keyFileVariable: 'SSHKEY', passphraseVariable: '', usernameVariable: 'SSHUSERNAME')]) {
                 stage("Install Apache"){
-                    sh 'ansible-playbook -i "104.131.110.132," --private-key $SSHKEY main.yml'
+                    sh '''
+                        export ANSIBLE_HOST_KEY_CHECKING=False
+                        ansible-playbook -i "104.131.110.132," --private-key $SSHKEY main.yml
+                        '''
                 }
             }
         }
