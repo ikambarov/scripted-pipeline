@@ -19,6 +19,14 @@ if (nodeIP?.trim()) {
             stage("Install Ansible"){
                 sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum install ansible -y'
             }
+            stage("Install Packer"){
+                sh '''
+                ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum install -y yum-utils
+                ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+                ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} mv /usr/sbin/packer /usr/sbin/packer_original
+                ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum -y install packer
+                '''
+            }
         }
     }
 }
