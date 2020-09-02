@@ -38,7 +38,7 @@ if (nodeIP?.trim()) {
             stage("Install Packer"){
                 sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum install -y yum-utils'
                 sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo'
-                sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} mv /usr/sbin/packer /usr/sbin/packer_original'
+                // sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} mv /usr/sbin/packer /usr/sbin/packer_original'
                 sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum install -y packer'
             }
         }
