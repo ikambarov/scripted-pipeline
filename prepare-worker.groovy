@@ -35,6 +35,14 @@ if (nodeIP?.trim()) {
                 sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} unzip terraform_0.11.14_linux_amd64.zip'
                 sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} mv terraform /usr/bin/terraform-0.11'
             }
+            stage("Install Packer"){
+                sh """
+                    sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum install -y yum-utils'
+                    sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo'
+                    sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP} mv /usr/sbin/packer /usr/sbin/packer_original'
+                    sh 'ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${nodeIP}yum -y install packer'
+                """
+            }
         }
     }
 }
