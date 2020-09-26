@@ -10,6 +10,6 @@ node {
     }
 
     stage("Install Melodi"){
-        ansiblePlaybook become: true, colorized: true, credentialsId: 'jenins-master', disableHostKeyChecking: true, inventory: "${params.node},", playbook: 'ansible-melodi/main.yml'
+        ansiblePlaybook become: true, colorized: true, credentialsId: 'jenkins-master', disableHostKeyChecking: true, inventory: "${params.node},", playbook: 'ansible-melodi/main.yml'
     }    
 }
