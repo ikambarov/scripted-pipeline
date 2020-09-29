@@ -2,6 +2,7 @@ properties([
     parameters([
         booleanParam(defaultValue: true, description: 'Do you want to run terraform apply', name: 'terraform_apply'),
         booleanParam(defaultValue: false, description: 'Do you want to run terraform destroy', name: 'terraform_destroy')
+        whats the env?
     ])
 ])
 
@@ -14,6 +15,7 @@ node{
         withCredentials([usernamePassword(credentialsId: 'aws_jenkins_key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
             stage("Terraform Init"){
                 sh """
+                    bash setenv.sh dev.tfvars
                     terraform init 
                 """
             }
