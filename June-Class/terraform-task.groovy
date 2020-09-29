@@ -1,3 +1,10 @@
+properties([
+    parameters([
+        booleanParam(defaultValue: true, description: 'Do you want to run terraform apply', name: 'terraform_apply'),
+        booleanParam(defaultValue: false, description: 'Do you want to run terraform destroy', name: 'terraform_destroy')
+    ])
+])
+
 node{
     stage("Pull Repo"){
         git branch: 'solution', url: 'https://github.com/ikambarov/terraform-task.git'
@@ -11,11 +18,27 @@ node{
                 """
             }
 
-            stage("Terraform Apply"){
-                sh """
-                    terraform apply -auto-approve
-                """
+            if(params.terraform_apply){
+                stage("Terraform Apply"){
+                    sh """
+                        terraform apply -auto-approve
+                    """
+                }
             }
+            else if(params.terraform_destroy){
+                stage("Terraform Destroy"){
+                    sh """
+                        terraform destroy -auto-approve
+                    """
+                }
+            }
+            else {
+                stage("Terraform Plan"){
+                    sh """
+                        terraform plan
+                    """
+                }
+            }           
         }        
     }
 }
