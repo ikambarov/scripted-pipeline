@@ -32,10 +32,11 @@ node {
 
             stage('Packer Build') {
                 sh 'packer build apache.json'
+                ami_id = sh(script: 'packer build apache.json | grep us-east-1 | awk '{print $2}', returnStdout: true)
             }   
 
             stage('Creaet Instance') {
-                sh 'packer build apache.json'
+                build wait: false, job: 'terraform-ec2', parameters: [booleanParam(name: 'terraform_apply', value: true), booleanParam(name: 'terraform_destroy', value: false), string(name: 'environment', value: "${params.environment}"), string(name: 'ami_id', value: "${ami_id}")]
             }
         }     
     }
