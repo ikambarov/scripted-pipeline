@@ -9,42 +9,18 @@ properties([
 
 def aws_region_var = ''
 
-if(params.SOURCE_PROJECT_NAME){
-    if(params.SOURCE_PROJECT_NAME ==~ "dev.*") {
-        println("Applying Dev")
-        aws_region_var = "us-east-1"
-        environment = "dev"
-    }
-    else if(params.SOURCE_PROJECT_NAME ==~ "qa.*") {
-        println("Applying QA")
-        aws_region_var = "us-east-2"
-        environment = "qa"
-    }
-    else if(params.SOURCE_PROJECT_NAME == "master") {
-        println("Applying Prod")
-        aws_region_var = "us-west-2"
-        environment = "prod"
-    }
-    else {
-        error("Branch name didn't match RegEx")
-    }
+if(params.environment == "dev") {
+    println("Applying Dev")
+    aws_region_var = "us-east-1"
 }
-else {
-    if(params.environment == "dev") {
-        println("Applying Dev")
-        aws_region_var = "us-east-1"
-    }
-    else if(params.environment == "qa") {
-        println("Applying QA")
-        aws_region_var = "us-east-2"
-    }
-    else if(params.environment == "prod") {
-        println("Applying Prod")
-        aws_region_var = "us-west-2"
-    }
+else if(params.environment == "qa") {
+    println("Applying QA")
+    aws_region_var = "us-east-2"
 }
-
-
+else if(params.environment == "prod") {
+    println("Applying Prod")
+    aws_region_var = "us-west-2"
+}
 
 def tfvar = """
     s3_bucket = \"jenkins-terraform-evolvecybertraining\"
