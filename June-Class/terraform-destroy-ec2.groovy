@@ -1,50 +1,30 @@
 properties([
     parameters([
-        booleanParam(defaultValue: true, description: 'Do you want to run terrform apply', name: 'terraform_apply'),
-        booleanParam(defaultValue: false, description: 'Do you want to run terrform destroy', name: 'terraform_destroy'),
-        choice(choices: ['dev', 'qa', 'prod'], description: 'Choose Environment', name: 'environment'),
-        string(defaultValue: '', description: 'Provide AMI Name', name: 'ami_name', trim: true)
+        booleanParam(defaultValue: false, description: 'Do you want to run terrform destroy', name: 'terraform_destroy')
     ])
 ])
 
 def aws_region_var = ''
+def environment = ''
 
-if(params.SOURCE_PROJECT_NAME){
-    if(params.SOURCE_PROJECT_NAME ==~ "dev.*") {
-        println("Applying Dev")
-        aws_region_var = "us-east-1"
-        environment = "dev"
-    }
-    else if(params.SOURCE_PROJECT_NAME ==~ "qa.*") {
-        println("Applying QA")
-        aws_region_var = "us-east-2"
-        environment = "qa"
-    }
-    else if(params.SOURCE_PROJECT_NAME == "master") {
-        println("Applying Prod")
-        aws_region_var = "us-west-2"
-        environment = "prod"
-    }
-    else {
-        error("Branch name didn't match RegEx")
-    }
+if(params.SOURCE_PROJECT_NAME ==~ "dev.*") {
+    println("Applying Dev")
+    aws_region_var = "us-east-1"
+    environment = "dev"
+}
+else if(params.SOURCE_PROJECT_NAME ==~ "qa.*") {
+    println("Applying QA")
+    aws_region_var = "us-east-2"
+    environment = "qa"
+}
+else if(params.SOURCE_PROJECT_NAME == "master") {
+    println("Applying Prod")
+    aws_region_var = "us-west-2"
+    environment = "prod"
 }
 else {
-    if(params.environment == "dev") {
-        println("Applying Dev")
-        aws_region_var = "us-east-1"
-    }
-    else if(params.environment == "qa") {
-        println("Applying QA")
-        aws_region_var = "us-east-2"
-    }
-    else if(params.environment == "prod") {
-        println("Applying Prod")
-        aws_region_var = "us-west-2"
-    }
+    error("Branch name didn't match RegEx")
 }
-
-
 
 def tfvar = """
     s3_bucket = \"jenkins-terraform-evolvecybertraining\"
@@ -52,7 +32,7 @@ def tfvar = """
     s3_folder_region = \"us-east-1\"
     s3_folder_type = \"class\"
     s3_tfstate_file = \"infrastructure.tfstate\"
-    environment = \"${params.environment}\"
+    environment = \"${environment}\"
 
     region   = \"${aws_region_var}\"
     az1      = \"${aws_region_var}a\"
@@ -70,7 +50,7 @@ def tfvar = """
     private_cidr3   = \"172.32.12.0/24\"
 
     public_key    = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDXUI8Mt0W/65CPA5rnR4auE8qVb08c6qR9Ca0yQaz9xM6EuShYX8jmktYbrdCIkZTMXbRF58CkWID/NHjYX4ZWZHwLi5uf2RfQegF67+kv6yJ2cgG4AsxUmWqlznxvm9615r8tpzBkKgsya58H+4aPRKqLJmhRm3ZZCa7t2HE7S+RR7fq+WtaQ3BMaKog9AVfHSEP8Gp4Ho7WUv5YlLXu5hlYC+m2oxrSCqXRFIhDtDuyphkzS93gDy8EVBkWnJFkoXT2LbVydcJaNCpEdjB1YFEEc1kMOXCAZ0w5N8PiWgdlY0lPeRXdH1RLX+WCM5FVOT9ujrq8PTQSYIkl2pek3"	
-    ami_name        = "${params.ami_name}"
+    ami_name        = \"*\"
 """
 
 node{
@@ -78,7 +58,7 @@ node{
         cleanWs()
         git url: 'https://github.com/ikambarov/terraform-ec2-by-ami-name.git'
 
-        writeFile file: "${params.environment}.tfvars", text: "${tfvar}"
+        writeFile file: "${environment}.tfvars", text: "${tfvar}"
     }
 
     withCredentials([usernamePassword(credentialsId: 'aws_jenkins_key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
@@ -90,14 +70,7 @@ node{
                 """
             }        
             
-            if (params.terraform_apply) {
-                stage("Terraform Apply"){
-                    sh """
-                        terraform apply -var-file ${environment}.tfvars -auto-approve
-                    """
-                }
-            }
-            else if (params.terraform_destroy) {
+            if (params.terraform_destroy) {
                 stage("Terraform Destroy"){
                     sh """
                         terraform destroy -var-file ${environment}.tfvars -auto-approve
