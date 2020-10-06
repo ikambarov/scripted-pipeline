@@ -15,7 +15,9 @@ node("docker"){
         stage("Docker Push"){
             sh "docker push ${REGISTRY_USERNAME}/flaskex"
         }
-    }
 
-    
+        stage("Cleanup"){
+            sh "docker rmi ${REGISTRY_USERNAME}/flaskex"
+        }
+    }
 }
