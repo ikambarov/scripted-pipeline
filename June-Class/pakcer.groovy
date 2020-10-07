@@ -37,7 +37,12 @@ node {
             }   
 
             stage('Build EC2 Instance') {
-                build wait: false, job: 'terraform-ec2', parameters: [booleanParam(name: 'terraform_apply', value: true), booleanParam(name: 'terraform_destroy', value: false), string(name: 'environment', value: "${params.environment}"), string(name: 'ami_name', value: "${ami_name}")]
+                build wait: false, job: 'terraform-ec2', parameters: [
+                    booleanParam(name: 'terraform_apply', value: true),
+                    booleanParam(name: 'terraform_destroy', value: false),
+                    string(name: 'environment', value: "${params.environment}"),
+                    string(name: 'ami_name', value: "${ami_name}")
+                    ]
             }
         }     
     }
