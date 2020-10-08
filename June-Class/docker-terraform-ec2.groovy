@@ -3,7 +3,8 @@ properties([
         booleanParam(defaultValue: true, description: 'Do you want to run terrform apply', name: 'terraform_apply'),
         booleanParam(defaultValue: false, description: 'Do you want to run terrform destroy', name: 'terraform_destroy'),
         choice(choices: ['dev', 'qa', 'prod'], description: 'Choose Environment', name: 'environment'),
-        string(defaultValue: '', description: 'Provide AMI Name', name: 'ami_name', trim: true)
+        string(defaultValue: '', description: 'Provide AMI Name', name: 'ami_name', trim: true),
+        string(defaultValue: '', description: 'Provide Deployment Name', name: 'deployment_name', trim: true)
     ])
 ])
 
@@ -24,7 +25,7 @@ else if(params.environment == "prod") {
 
 def tfvar = """
     s3_bucket = \"jenkins-terraform-evolvecybertraining\"
-    s3_folder_project = \"terraform_ec2\"
+    s3_folder_project = \"${params.deployment_name}\"
     s3_folder_region = \"us-east-1\"
     s3_folder_type = \"class\"
     s3_tfstate_file = \"infrastructure.tfstate\"
