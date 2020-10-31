@@ -6,11 +6,11 @@ node{
     ])
 
     withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ssh-key', keyFileVariable: 'SSH_KEY', passphraseVariable: '', usernameVariable: 'SSH_USERNAME')]) {
-       stage("Ping"){
+    stage("Ping"){
             sh """
                 export ANSIBLE_HOST_KEY_CHECKING=False
                 ansible -i "${node_ip}," --private-key $SSH_KEY all -m ping -u $SSH_USERNAME
             """
         } 
-    }  
-}
+    } 
+
