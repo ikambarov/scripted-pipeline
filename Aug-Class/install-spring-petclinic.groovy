@@ -18,7 +18,7 @@ node{
                 """ 
             } 
             stage("Pull Spring Petclinic App"){
-                withEnv(['FLASKEX_REPO=https://github.com/ikambarov/spring-petclinic.git', 'FLASKEX_BRANCH=master']) {
+                withEnv(['SPRINGPETCLINIC_REPO=https://github.com/ikambarov/spring-petclinic.git', 'SPRINGPETCLINIC_BRANCH=master']) {
                     sh """
                         export ANSIBLE_HOST_KEY_CHECKING=False
                         ansible-playbook -i "${node_ip}," --private-key $SSH_KEY -u $SSH_USERNAME pull_repo.yml
