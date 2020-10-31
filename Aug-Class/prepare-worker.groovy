@@ -15,6 +15,9 @@ node{
         stage('Install Java'){
             sh "ssh -o StrictHostKeyChecking=false -i $SSH_KEY root@${node_ip} yum install java-1.8.0-openjdk-devel -y"
         }
+        stage('Install Ansible'){
+            sh "ssh -o StrictHostKeyChecking=false -i $SSH_KEY root@${node_ip} yum install ansible -y"
+        }
     } 
 }
 
