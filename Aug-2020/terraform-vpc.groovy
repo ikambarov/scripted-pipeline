@@ -23,33 +23,33 @@ node("terraform"){
     }
 
     withCredentials([usernamePassword(credentialsId: 'jenkins_aws_keys', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-        withEnv(['AWS_REGION=${vpc_region}']) {
+        withEnv(["AWS_REGION=${vpc_region}"]) {
             stage("Terrraform Init"){
-                sh '''
+                sh """
                     source setenv.sh ${vpc_env}.tfvars
                     terraform init
-                '''
+                """
             }        
             
             if(params.ACTION == 'Destroy'){
                 stage("Terraform Destroy"){
-                    sh '''
+                    sh """
                         terraform destroy -var-file ${vpc_env}.tfvars -auto-approve
-                    '''
+                    """
                 }
             }
             else if(params.ACTION == 'Apply'){
                 stage("Terraform Apply"){
-                    sh '''
+                    sh """
                         terraform apply -var-file ${vpc_env}.tfvars -auto-approve
-                    '''
+                    """
                 }
             }
             else if(params.ACTION == 'Plan') {
                 stage("Terraform Plan"){
-                    sh '''
+                    sh """
                         terraform plan -var-file ${vpc_env}.tfvars
-                    '''
+                    """
                 }
             }       
         }
