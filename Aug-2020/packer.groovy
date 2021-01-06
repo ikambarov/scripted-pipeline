@@ -20,6 +20,7 @@ else if(params.environment == "prod") {
 }
 
 def random_name = "${params.environment}-${ UUID.randomUUID().toString()}"
+def ami_id = ''
 
 node("packer"){
     stage('Pull Repo') {
@@ -33,7 +34,18 @@ node("packer"){
             }
 
             stage('Packer Build') {
-                sh 'packer build apache.json'
+                sh """
+                    packer build apache.json | tee output.log
+                """
+                ami_id = sh (script: "cat output.log | grep ${aws_region_var} | awk '{print \$2}'", returnstDout: true)
+            }
+
+            stage('Trigger Deploy Instance'){
+                build wait: false, job: 'terraform-ec2', parameters: [
+                    string(name: 'ACTION', value: 'Apply'),
+                    string(name: 'ENVIRONMENT', value: "${params.environment}"),
+                    string(name: 'AMI_ID', value: "${ami_id}")
+                ]
             }
         }
     }
