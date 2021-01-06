@@ -1,20 +1,20 @@
 properties([
     parameters([
-        choice(choices: ['dev', 'qa', 'prod'], description: 'Choose Environment', name: 'environment')
+        choice(choices: ['Dev', 'QA', 'Prod'], description: 'Choose Environment', name: 'environment')
     ])
 ])
 
 def aws_region_var = ''
 
-if(params.environment == "dev") {
+if(params.environment == "Dev") {
     println("Creating image at Dev")
     aws_region_var = "us-east-1"
 }
-else if(params.environment == "qa") {
+else if(params.environment == "QA") {
     println("Creating image at QA")
     aws_region_var = "us-east-2"
 }
-else if(params.environment == "prod") {
+else if(params.environment == "Prod") {
     println("Creating image at Prod")
     aws_region_var = "us-west-2"
 }
