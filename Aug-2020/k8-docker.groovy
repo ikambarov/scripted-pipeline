@@ -35,10 +35,31 @@ spec:
 
 podTemplate(name: k8slabel, label: k8slabel, yaml: slavePodTemplate, showRawYaml: false) {
   node(k8slabel){
-      stage('Docker'){
+    stage("Pull repo"){
+      container("docker"){
+        git url: 'https://github.com/ikambarov/Flaskex-docker.git'
+      }
+    }
+
+    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+      stage('Docker build'){
         container("docker"){
-          sh 'docker ps'
+          sh "docker build -t ${DOCKERHUB_USERNAME}/flaskex ."
         }     
       }
+
+      stage('Docker login'){
+        container("docker"){
+          sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+        }     
+      }
+
+      stage('Docker push'){
+        container("docker"){
+          sh "docker push ${DOCKERHUB_USERNAME}/flaskex"
+        }     
+      }
+    }
+    
   }
 }
