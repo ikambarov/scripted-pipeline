@@ -33,7 +33,7 @@ podTemplate(name: k8slabel, label: k8slabel, yaml: slavePodTemplate, showRawYaml
         }
         stage("Helm install") {
             container("k8-tools") {
-                sh 'helm install -n default flaskex .'
+                sh 'helm upgrade --install flaskex .'
             }
         }
     }
