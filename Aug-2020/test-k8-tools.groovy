@@ -21,14 +21,14 @@ def slavePodTemplate = """
         - name: k8-tools
           image: ikambarov/k8-tools
           imagePullPolicy: Always
-        serviceAccountName: default
+        serviceAccountName: k8-tools
     """
 
 podTemplate(name: k8slabel, label: k8slabel, yaml: slavePodTemplate, showRawYaml: false) {
     node(k8slabel) {
         stage("Kubernetes") {
             container("k8-tools") {
-                sh 'kubectl version'
+                sh 'kubectl get pods'
                 sh 'helm version'
             }
         }
