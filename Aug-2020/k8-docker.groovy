@@ -59,6 +59,10 @@ podTemplate(name: k8slabel, label: k8slabel, yaml: slavePodTemplate, showRawYaml
           sh "docker push ${DOCKERHUB_USERNAME}/flaskex"
         }     
       }
+
+      stage('Trigger Helm install'){
+        build wait: false, propagate: false, job: 'helm-flaskex'
+      }
     }
     
   }
