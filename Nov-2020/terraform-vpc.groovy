@@ -49,6 +49,13 @@ node{
                     """
                 }
             }
+            else {
+                stage("Terraform Plan"){
+                    sh """
+                        terraform plan -var-file ${environment}.tfvars
+                    """
+                }
+            }
         }        
     }    
 }
