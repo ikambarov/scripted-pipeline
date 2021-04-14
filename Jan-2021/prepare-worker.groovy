@@ -1,10 +1,10 @@
 node{
-    stage('Initialize'){
+    stage("Install git"){
         withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-master-ssh-key', keyFileVariable: 'SSHKEY', passphraseVariable: '', usernameVariable: 'SSHUSERNAME')]) {
-            sh '''
-                    ssh -i $SSHKEY root@104.131.114.15 yum install epel-release -y
-                '''
-        }
-    } 
+            sh """
+                ssh -o StrictHostKeyChecking=no -i $SSHKEY root@104.236.193.148 yum install git -y
+            """
+        }   
+    }
 }
 
