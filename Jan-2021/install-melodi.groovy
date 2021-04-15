@@ -1,3 +1,9 @@
+properties([
+    parameters([
+        string(defaultValue: '', description: 'Enter IP Address', name: 'IPADDRESS', trim: true)
+        ])
+    ])
+
 node{
     stage("Pull Repo"){
         git 'https://github.com/ikambarov/ansible-melodi.git'
@@ -7,7 +13,7 @@ node{
         stage("Ansible"){
             sh """
                 export ANSIBLE_HOST_KEY_CHECKING=False
-                ansible-playbook --private-key $SSHKEY -i "165.227.75.236," main.yml
+                ansible-playbook --private-key $SSHKEY -i "${params.IPADDRESS}," main.yml
             """
         }
     }
