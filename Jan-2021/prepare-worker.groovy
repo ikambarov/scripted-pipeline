@@ -16,6 +16,12 @@ node{
                 ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${params.IPADDRESS} yum install java-1.8.0-openjdk-devel -y
             """
         }   
+        stage("Install Ansible"){
+            sh """
+                ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${params.IPADDRESS} yum install epel-release -y
+                ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${params.IPADDRESS} yum install ansible -y
+            """
+        }   
     }
 }
 
