@@ -1,5 +1,7 @@
 node('packer'){
-    sh '''
-        packer version
-    '''
+    stage("Check"){
+        sh '''
+            packer version
+        '''
+    } 
 }
