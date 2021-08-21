@@ -53,8 +53,4 @@ node("terraform"){
             }
         }
     }
-    
-    
-
-    
 }
