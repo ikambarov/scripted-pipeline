@@ -25,7 +25,7 @@ node("worker1"){
         }
         stage("Start App"){
             sh """
-                ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${params.IPADDRESS} 'if pgrep python9; then pkill -9 python9; fi'
+                ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${params.IPADDRESS} 'if pgrep python3; then pkill -9 python3; fi'
                 ssh -o StrictHostKeyChecking=no -i $SSHKEY $SSHUSERNAME@${params.IPADDRESS} 'nohup python3 Flaskex/app.py &'
             """
         }
