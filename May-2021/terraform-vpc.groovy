@@ -1,6 +1,7 @@
 properties([
     parameters([
-        choice(choices: ['dev', 'qa', 'prod'], description: 'Choose an ENV from the list', name: 'environment')
+        choice(choices: ['dev', 'qa', 'prod'], description: 'Choose an ENV from the list', name: 'environment'),
+        booleanParam(defaultValue: true, description: 'Do you want to apply?', name: 'command')
         ])
     ])
 
@@ -29,17 +30,26 @@ node("worker1"){
                 """
             }
 
-            stage("Plan"){
-                sh """
-                    terraform plan -var-file ${params.environment}.tfvars
-                """
-            }
+            if(params.command == true){
+                stage("Plan"){
+                    sh """
+                        terraform plan -var-file ${params.environment}.tfvars
+                    """
+                }
 
-            stage("Apply"){
-                sh """
-                    terraform apply -auto-approve -var-file ${params.environment}.tfvars
-                """
+                stage("Apply"){
+                    sh """
+                        terraform apply -auto-approve -var-file ${params.environment}.tfvars
+                    """
+                }
             }
+            else{
+                stage("Destroy"){
+                    sh """
+                        terraform destroy -auto-approve -var-file ${params.environment}.tfvars
+                    """
+                }
+            }            
         }
     }
 }
