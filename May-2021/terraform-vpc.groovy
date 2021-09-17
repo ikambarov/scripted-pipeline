@@ -17,6 +17,7 @@ else{
 
 node("worker1"){
     stage("Pull"){
+        cleanWs()
         git 'https://github.com/ikambarov/terraform-vpc.git'
     }
 
