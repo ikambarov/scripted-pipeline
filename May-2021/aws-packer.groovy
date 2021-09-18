@@ -37,7 +37,12 @@ node("worker1"){
             }
         }
     }
-    // stage("Create Instance"){
-    //     build 'terraform-ec2'
-    // }
+
+    stage("Create Instance"){
+        build job: 'terraform-ec2', parameters: [
+            string(name: 'environment', value: "$params.environment"),
+            string(name: 'ami_name', value: "$image_name"),
+            booleanParam(name: 'command', value: true)
+            ]
+    }
 }
