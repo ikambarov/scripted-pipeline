@@ -41,7 +41,7 @@ podTemplate(name: podname, label: podname, yaml: podtemplate, showRawYaml: false
             withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USERNAME')]) {
                 stage('Build Image'){
                     sh '''
-                        docker build $REGISTRY_USERNAME/flaskex
+                        docker build -t $REGISTRY_USERNAME/flaskex .
                     '''
                 }
 
