@@ -16,9 +16,11 @@ spec:
 podTemplate(name: podname, label: podname, yaml: podtemplate, showRawYaml: false) {
     node(podname){
         stage('Check version'){
-            sh '''
-                ansible --version
-            '''
+            container(podname){
+                sh '''
+                    ansible --version
+                '''
+            }           
         }
     }
 }
