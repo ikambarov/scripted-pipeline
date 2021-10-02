@@ -16,7 +16,7 @@ spec:
         - jenkins-jenkins-master
       topologyKey: "kubernetes.io/hostname"
   containers:
-  - image: hashicorp/terraform:0.14.11
+  - image: ikambarov/terraform:0.14
     name: $podname
 """
 
