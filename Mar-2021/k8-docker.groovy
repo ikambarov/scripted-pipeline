@@ -33,12 +33,25 @@ spec:
 
 podTemplate(name: podname, label: podname, yaml: podtemplate, showRawYaml: false) {
     node(podname){
-        stage('Check version'){
-            container(podname){
-                sh '''
-                    docker version
-                '''
-            }           
+        container(podname){
+            stage('Pull Dockerfile'){
+                git 'https://github.com/ikambarov/Flaskex-docker.git'
+            }
+            
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USERNAME')]) {
+                stage('Build Image'){
+                    sh '''
+                        docker build $REGISTRY_USERNAME/flaskex
+                    '''
+                }
+
+                stage('Push Image'){
+                    sh '''
+                        docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
+                        docker push $REGISTRY_USERNAME/flaskex
+                    '''
+                }   
+            }    
         }
     }
 }
