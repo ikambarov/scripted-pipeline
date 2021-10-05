@@ -29,9 +29,7 @@ podTemplate(name: podname, label: podname, yaml: podtemplate, showRawYaml: false
         stage('Check version'){
             container(podname){
                 sh '''
-                    kubectl version
-                    kubectl get pods
-                    helm version
+                    kubectl run nginx-pod --image=nginx --dry-run -o yaml | kubectl apply -f -
                 '''
             }           
         }
