@@ -19,7 +19,7 @@ podTemplate(label: 'k8-tools', name: 'k8-tools', namespace: 'tools', yaml: podte
         container("k8-tools"){
             stage("deploy"){
                 sh '''
-                    kubectl get pod
+                    kubectl run flaskex-pod --image=ikambarov/flaskex -n default --dry-run=client -o yaml | kubectl apply -f - 
                 '''
             }
         }
