@@ -10,11 +10,6 @@ node('ansible'){
     }
 
     stage("Deploy"){
-        withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
-            sh """
-                export ANSIBLE_HOST_KEY_CHECKING=False
-                ansible-playbook --private-key $SSH_KEY -i '${ params.ip },' -u $SSH_USER main.yml
-            """
-        }
+        ansiblePlaybook credentialsId: 'jenkins-key', inventory: '${ params.ip },', playbook: 'main.yml'
     }
 }
