@@ -10,6 +10,6 @@ node('ansible'){
     }
 
     stage("Deploy"){
-        ansiblePlaybook credentialsId: 'jenkins-key', inventory: '${ params.ip },', playbook: 'main.yml'
+        ansiblePlaybook credentialsId: 'jenkins-key', disableHostKeyChecking: true, inventory: "${ params.ip },", playbook: 'main.yml'
     }
 }
