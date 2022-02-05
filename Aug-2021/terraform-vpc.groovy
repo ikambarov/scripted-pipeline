@@ -13,6 +13,9 @@ else if( params.environment == "qa" ){
 else if( params.environment == "prod" ){
     aws_region_var = "us-west-2"
 }
+else {
+    error 'Parameter was not set'
+}
 
 node('terraform'){
     stage("Pull Code"){
