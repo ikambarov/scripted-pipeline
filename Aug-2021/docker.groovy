@@ -11,10 +11,10 @@ node('docker'){
         }
 
         stage('Push'){
-            sh """
-                docker login -u ${USERNAME}  -p ${PASSWORD}
-                docker push ${USERNAME}/flaskex:v1
-            """
+            sh '''
+                docker login -u $USERNAME -p $PASSWORD
+                docker push $USERNAME/flaskex:v1
+            '''
         }
     }
 }
