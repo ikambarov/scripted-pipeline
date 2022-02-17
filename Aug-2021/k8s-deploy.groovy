@@ -18,9 +18,9 @@ podTemplate(cloud: 'kubernetes', label: 'k8s', name: 'k8s', namespace: 'jenkins'
         container('k8s'){
             stage('Deploy'){
                 sh """
-                    kubectl create deployment flaskex --image=ikambarov/flaskex --port=5000 -n default -o yaml --dry-run | kubectl apply --force -f - 
+                    kubectl create deployment flaskex --image=ikambarov/flaskex --port=5000 -n default -o yaml --dry-run | kubectl apply -n default --force -f - 
                     
-                    kubectl expose deployment flaskex --target-port=5000 --type=NodePort -n default -o yaml --dry-run | kubectl apply --force -f - 
+                    kubectl expose deployment flaskex --target-port=5000 --type=NodePort -n default  -o yaml --dry-run | kubectl apply -n default --force -f - 
                 """
             }
         }
