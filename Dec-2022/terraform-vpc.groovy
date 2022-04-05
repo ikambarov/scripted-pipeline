@@ -1,6 +1,7 @@
 properties([
     parameters([
-        choice(choices: ['dev', 'qa', 'prod'], description: 'Choose an Environment', name: 'environment')
+        choice(choices: ['dev', 'qa', 'prod'], description: 'Choose an Environment', name: 'environment'),
+        choice(choices: ['destroy', 'apply'], description: 'Choose the Action', name: 'action')
         ])
     ])
 
@@ -36,10 +37,20 @@ node {
                 """
             }
 
-            stage('Terraform Apply'){
-                sh """
-                    terraform apply -var-file ${params.environment}.tfvars -auto-approve
-                """
+            if(params.action == 'apply'){
+                stage('Terraform Apply'){
+                    sh """
+                        terraform apply -var-file ${params.environment}.tfvars -auto-approve
+                    """
+                }
+            }
+
+            else {
+                stage('Terraform Destroy'){
+                    sh """
+                        terraform destroy -var-file ${params.environment}.tfvars -auto-approve
+                    """
+                }
             }
         }
     }
