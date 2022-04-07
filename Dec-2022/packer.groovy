@@ -34,6 +34,12 @@ node {
                 sh """
                     packer build apache.json
                 """
+
+                build job: 'terraform-ec2', parameters: [
+                                                            string(name: 'environment', value: "${params.environment}"),
+                                                            string(name: 'ami', value: "${ami_name}"),
+                                                            string(name: 'action', value: 'apply')
+                                                            ]
             }
         }
     }
