@@ -13,7 +13,9 @@ spec:
 podTemplate(cloud: 'kubernetes', label: 'terraform', name: 'terraform', yaml: pod ) {
     node('terraform'){
         stage("Check Terraform Version"){
-            sh "terraform version"
+            container('terraform'){
+                sh "terraform version"
+            }
         }
     }
 }
