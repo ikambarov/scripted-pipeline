@@ -11,13 +11,21 @@ spec:
     args:
     - sleep
     - "1000000"
+    volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker-sock
+      type: File
+  volumes:
+  - name: docker-sock
+    hostPath:
+      path: /var/run/docker.sock
 '''
 
 podTemplate(cloud: 'kubernetes', label: 'docker', name: 'docker', yaml: pod ) {
     node('docker'){
         stage("Check docker Version"){
             container('docker'){
-                sh "docker version"
+                sh "docker build "
             }
         }
     }
