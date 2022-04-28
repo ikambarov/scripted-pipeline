@@ -39,7 +39,7 @@ podTemplate(cloud: 'kubernetes', label: 'docker', name: 'docker', yaml: pod ) {
                 stage("Push Image"){
                     sh """
                         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                        docker push ikambarov/flaskex:latest
+                        docker push $DOCKER_USERNAME/flaskex:latest
                     """
                 }
             } 
