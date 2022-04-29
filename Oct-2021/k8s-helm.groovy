@@ -20,7 +20,7 @@ podTemplate(cloud: 'kubernetes', showRawYaml: false, label: 'helm', name: 'helm'
 
             stage("Test"){
                 sh """
-                    helm install -n default flaskex . 
+                    helm upgrade --install -n default flaskex . 
                 """
             }
         }
