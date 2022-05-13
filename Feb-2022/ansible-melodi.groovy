@@ -6,8 +6,6 @@ properties([
 
 node {
     stage("Pull Playbook"){
-        
-
         git 'https://github.com/ikambarov/ansible-melodi.git'
     }
     
