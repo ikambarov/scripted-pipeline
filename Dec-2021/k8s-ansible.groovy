@@ -8,6 +8,9 @@ spec:
   containers:
   - image: ikambarov/ansible
     name: ansible
+    args:
+    - sleep
+    - "100000"
 '''
 
 podTemplate(cloud: 'kubernetes', label: 'ansible', showRawYaml: false, yaml: podTemplate) {
