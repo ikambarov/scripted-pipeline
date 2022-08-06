@@ -23,7 +23,10 @@ podTemplate(cloud: 'kubernetes', label: 'ansible', showRawYaml: false, yaml: pod
         stage("Test"){
             container('ansible'){
                 withCredentials([sshUserPrivateKey(credentialsId: 'ansible-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USERNAME')]) {
-                    sh "ansible -m ping --private-key=$SSH_KEY all -i '$params.IP,' -u $SSH_USERNAME -b" 
+                    sh """
+                        export ANSIBLE_HOST_KEY_CHECKING=False
+                        ansible -m ping --private-key=$SSH_KEY all -i \"${params.IP},\" -u $SSH_USERNAME 
+                    """
                 }
             }
         }
