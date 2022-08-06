@@ -1,8 +1,8 @@
-// properties([
-//     parameters([
-//         string(description: 'Enter Linux IP Address', name: 'IP', trim: true)
-//         ])
-//     ])
+properties([
+    parameters([
+        string(description: 'Enter Linux IP Address', name: 'IP', trim: true)
+        ])
+    ])
 
 podtemplate = '''apiVersion: v1
 kind: Pod
@@ -22,7 +22,9 @@ podTemplate(cloud: 'kubernetes', label: 'ansible', showRawYaml: false, yaml: pod
     node('ansible'){
         stage("Test"){
             container('ansible'){
-                sh "ansible --version"
+                withCredentials([sshUserPrivateKey(credentialsId: 'ansible-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USERNAME')]) {
+                    sh "ansible -m ping --private-key=$SSH_KEY all -i '$params.IP,' -u $SSH_USERNAME -b" 
+                }
             }
         }
     }
