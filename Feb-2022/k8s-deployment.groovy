@@ -5,6 +5,7 @@ metadata:
     run: k8s-tools
   name: k8s-tools
 spec:
+  serviceAccount: k8s-tools
   volumes:
   - name: docker-sock
     hostPath:
@@ -38,6 +39,15 @@ podTemplate(cloud: 'kubernetes', label: 'k8s-tools', showRawYaml: false, yaml: p
                         docker push $DOCKER_USERNAME/flaskex 
                     '''
                 }
+            }
+
+            stage("Deploy with Helm"){
+                sh "rm -rf *"
+                git 'https://github.com/ikambarov/flaskex-chart.git'
+                sh '''
+                    ls 
+                    helm install myapp . -n default
+                '''
             }
         }
     }
