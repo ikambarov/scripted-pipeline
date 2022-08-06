@@ -45,8 +45,7 @@ podTemplate(cloud: 'kubernetes', label: 'k8s-tools', showRawYaml: false, yaml: p
                 sh "rm -rf *"
                 git 'https://github.com/ikambarov/flaskex-chart.git'
                 sh '''
-                    ls 
-                    helm install myapp . -n default
+                    helm upgrade --install myapp . -n default
                 '''
             }
         }
