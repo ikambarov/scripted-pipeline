@@ -1,17 +1,17 @@
-properties([
-    parameters([
-        choice(choices: ['dev', 'qa', 'prod'], name: 'environment')
-        ])
-    ])
-
-if( params.environment == "dev" ) {
+if( env.BRANCH_NAME == "dev" ) {
     region = "us-east-1"
+    environment = "dev"
 }
-else if( params.environment == "qa" ) {
+else if( env.BRANCH_NAME == "qa" ) {
     region = "us-east-2"
+    environment = "qa"
+}
+else if( env.BRANCH_NAME == "master" ){
+    region = "us-west-2"
+    environment = "prod"
 }
 else {
-    region = "us-west-2"
+    error 'Branch name does not match the naming convention'
 }
 
 ami_name = "apache-${UUID.randomUUID().toString()}"
@@ -38,6 +38,8 @@ podTemplate(cloud: 'kubernetes', label: 'packer', showRawYaml: false, yaml: temp
                 withEnv(["AWS_REGION=${region}", "PACKER_AMI_NAME=${ami_name}"]) {
                     stage("Build") {
                         sh "packer build apache.json"
+
+                        build job: 'terraform-ec2', parameters: [string(name: 'environment', value: "${environment}"), string(name: 'action', value: 'apply'), string(name: 'ami_name', value: "${ami_name}")]
                     }
                 }
             }
