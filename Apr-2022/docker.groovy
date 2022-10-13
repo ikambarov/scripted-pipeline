@@ -37,7 +37,7 @@ podTemplate(cloud: 'kubernetes', label: 'docker', showRawYaml: false, yaml: temp
                 stage("Push"){
                     sh '''
                         docker login -u $DOCKERHUBUSER -p $DOCKERHUBPASS
-                        docker push ikambarov/melodi:v1
+                        docker push $DOCKERHUBUSER/melodi:v1
                     '''
                 }
             }
